@@ -1,11 +1,13 @@
 // src/lib/items.js
 import itemsData from "../data/items.json";
 
+let items = [...itemsData];
+
 /**
  * Get all items
  */
 export async function getItems() {
-  return itemsData;
+  return items;
 }
 
 /**
@@ -13,7 +15,7 @@ export async function getItems() {
  * @param {number|string} id
  */
 export async function getItemById(id) {
-  return itemsData.find((item) => item.id === Number(id));
+  return items.find((item) => item.id === Number(id));
 }
 
 /**
@@ -21,7 +23,25 @@ export async function getItemById(id) {
  * @param {string} category
  */
 export async function getItemsByCategory(category) {
-  return itemsData.filter(
+  return items.filter(
     (item) => item.category.toLowerCase() === category.toLowerCase()
   );
+}
+
+/**
+ * Add new item
+ */
+export async function addItem(data) {
+  const newItem = {
+    id: Date.now(),
+    name: data.name,
+    description: data.description,
+    price: Number(data.price),
+    category: data.category,
+    stock: Number(data.stock),
+    image: data.image || "/placeholder.svg",
+  };
+
+  items = [newItem, ...items];
+  return newItem;
 }
