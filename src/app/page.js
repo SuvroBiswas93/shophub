@@ -5,7 +5,10 @@ import Hero from "@/components/hero";
 import Navbar from "@/components/navbar";
 import Newsletter from "@/components/newsletter";
 import Testimonials from "@/components/testimonials";
+import CTA from "@/components/cta";
 import Image from "next/image";
+import FAQ from "@/components/faq";
+
 
 export default function Home() {
   return (
@@ -17,6 +20,8 @@ export default function Home() {
         <Features />
         <Categories />
         <Testimonials />
+        <FAQ />
+        <CTA />
         <Newsletter />
       </main>
 
