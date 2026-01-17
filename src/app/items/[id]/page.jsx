@@ -96,7 +96,7 @@ export default async function ItemDetailPage({ params: promiseParams }) {
 
             <button
               disabled={item.stock === 0}
-              className={`w-full bg-linear-to-r from-teal-600 to-orange-500 text-white font-bold py-3 px-4 rounded hover:from-teal-700 hover:to-orange-600 transition mt-8 ${
+              className={`w-full bg-teal-500 text-white font-bold py-3 px-4 rounded hover:bg-teal-600 cursor-pointer transition mt-8 ${
                 item.stock === 0 ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >

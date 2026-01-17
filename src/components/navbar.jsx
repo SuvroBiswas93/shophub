@@ -1,7 +1,7 @@
 "use client"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
-// import { logoutAction } from "@/app/actions/auth"
+import { logoutAction } from "@/app/actions/auth"
 import { useEffect, useState } from "react"
 
 export default function Navbar() {
@@ -107,7 +107,7 @@ export default function Navbar() {
               </Link>
               <button
                 onClick={handleLogout}
-                className="w-full bg-red-600 hover:bg-red-700 px-4 py-2 rounded transition duration-300 font-semibold text-left"
+                className="w-full bg-red-600 hover:bg-red-700 px-4 py-2 cursor-pointer rounded transition duration-300 font-semibold text-left"
               >
                 Logout
               </button>
@@ -115,7 +115,7 @@ export default function Navbar() {
           ) : (
             <Link
               href="/login"
-              className={`block bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded transition duration-300 font-semibold text-center ${pathname === "/login" ? "bg-orange-700" : ""}`}
+              className={`block bg-orange-600 hover:bg-orange-700 cursor-pointer px-4 py-2 rounded transition duration-300 font-semibold text-center ${pathname === "/login" ? "bg-orange-700" : ""}`}
               onClick={() => setIsMenuOpen(false)}
             >
               Login
