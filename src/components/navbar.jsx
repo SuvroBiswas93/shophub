@@ -1,5 +1,4 @@
 "use client"
-
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 // import { logoutAction } from "@/app/actions/auth"
@@ -13,7 +12,7 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
-    // Check authentication from localStorage since we can't access cookies in client
+    // Check authentication from localStorage 
     const auth = localStorage.getItem("authenticated") === "true"
     setIsAuthenticated(auth)
     setIsLoading(false)
