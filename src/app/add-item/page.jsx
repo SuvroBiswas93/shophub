@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { addItem } from "@/lib/items";
+import Image from "next/image";
 
 export default function AddItemPage() {
   const router = useRouter();
@@ -27,7 +28,6 @@ export default function AddItemPage() {
     },
   });
 
-  // Watch image field for live preview
   const imageUrl = useWatch({ control, name: "image" });
 
   const onSubmit = async (data) => {
@@ -41,13 +41,13 @@ export default function AddItemPage() {
       }, 1500);
     } catch (err) {
       toast.error("Failed to add item");
+      console.error(err);
     }
   };
 
   return (
     <>
       <Navbar />
-
       <div className="max-w-2xl mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold mb-8">Add New Item</h1>
 
@@ -55,7 +55,7 @@ export default function AddItemPage() {
           onSubmit={handleSubmit(onSubmit)}
           className="bg-white p-8 rounded-lg shadow-xl space-y-6"
         >
-          {/* Item Name */}
+          {/* Name */}
           <div>
             <label className="font-semibold">Item Name</label>
             <input
@@ -73,7 +73,10 @@ export default function AddItemPage() {
             <textarea
               {...register("description", {
                 required: "Description is required",
-                minLength: { value: 10, message: "Description must be at least 10 characters" },
+                minLength: {
+                  value: 10,
+                  message: "Description must be at least 10 characters",
+                },
               })}
               rows={4}
               className="w-full border px-4 py-2 rounded"
@@ -126,9 +129,8 @@ export default function AddItemPage() {
               {...register("image", {
                 required: "Image URL is required",
                 pattern: {
-                  value:
-                    /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|avif|svg))$/i,
-                  message: "Enter a valid image URL (png, jpg, jpeg, gif, webp, avif, svg)",
+                  value: /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|avif|svg))$/i,
+                  message: "Enter a valid image URL",
                 },
               })}
               placeholder="https://example.com/image.jpg"
@@ -138,14 +140,10 @@ export default function AddItemPage() {
               <p className="text-red-500 text-sm">{errors.image.message}</p>
             )}
 
-            {/* Preview */}
             {imageUrl && (
-              <img
-                src={imageUrl}
-                alt="Preview"
-                className="w-40 h-40 object-cover rounded mt-4 mx-auto"
-                onError={(e) => (e.currentTarget.src = "/placeholder.svg")}
-              />
+              <div className="w-40 h-40 relative mx-auto mt-4">
+                <Image src={imageUrl} alt="Preview" fill className="object-cover rounded" />
+              </div>
             )}
           </div>
 

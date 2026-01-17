@@ -1,4 +1,3 @@
-// app/items/[id]/page.jsx
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import Link from "next/link";
@@ -6,9 +5,8 @@ import Image from "next/image";
 import { getItemById, getItems } from "@/lib/items";
 import { notFound } from "next/navigation";
 
-//  Metadata generation
-export async function generateMetadata({ params: promiseParams }) {
-  const params = await promiseParams; //  unwrap params
+// Metadata
+export async function generateMetadata({ params }) {
   const item = await getItemById(params.id);
 
   if (!item) return { title: "Item Not Found - ShopHub" };
@@ -19,18 +17,17 @@ export async function generateMetadata({ params: promiseParams }) {
   };
 }
 
-//  Static params for SSG
+// Static Params
 export async function generateStaticParams() {
   const items = await getItems();
   return items.map((item) => ({ id: item.id.toString() }));
 }
 
-// Page component
-export default async function ItemDetailPage({ params: promiseParams }) {
-  const params = await promiseParams; // unwrap params
+// Page
+export default async function ItemDetailPage({ params }) {
   const item = await getItemById(params.id);
 
-  if (!item) notFound(); // renders app/not-found.jsx
+  if (!item) notFound();
 
   return (
     <>
@@ -87,7 +84,7 @@ export default async function ItemDetailPage({ params: promiseParams }) {
                 <p className="text-gray-600 leading-relaxed">{item.description}</p>
               </div>
 
-              <div className="mt-8 p-4 bg-linear-to-r from-teal-50 to-orange-50 rounded-lg border border-teal-200">
+              <div className="mt-8 p-4 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg border border-teal-200">
                 <p className="text-sm text-gray-600">
                   <span className="font-semibold">Product ID:</span> #{item.id}
                 </p>
@@ -96,7 +93,7 @@ export default async function ItemDetailPage({ params: promiseParams }) {
 
             <button
               disabled={item.stock === 0}
-              className={`w-full bg-teal-500 text-white font-bold py-3 px-4 rounded hover:bg-teal-600 cursor-pointer transition mt-8 ${
+              className={`w-full bg-teal-500 text-white font-bold py-3 px-4 rounded hover:bg-teal-600 transition mt-8 ${
                 item.stock === 0 ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
