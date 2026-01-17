@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "name": "Wireless Headphones",
+    "description": "High-quality wireless headphones with noise cancellation",
+    "price": 129.99,
+    "category": "Electronics",
+    "image": "/wireless-headphones.png",
+    "stock": 15
+  },
+  {
+    "id": 2,
+    "name": "Leather Jacket",
+    "description": "Premium leather jacket perfect for any occasion",
+    "price": 199.99,
+    "category": "Fashion",
+    "image": "/classic-leather-jacket.png",
+    "stock": 8
+  },
+  {
+    "id": 3,
+    "name": "Running Shoes",
+    "description": "Comfortable running shoes for all terrains",
+    "price": 89.99,
+    "category": "Sports",
+    "image": "/running-shoes.jpg",
+    "stock": 20
+  },
+  {
+    "id": 4,
+    "name": "Coffee Maker",
+    "description": "Automatic coffee maker with programmable timer",
+    "price": 149.99,
+    "category": "Home",
+    "image": "/modern-coffee-maker.png",
+    "stock": 12
+  },
+  {
+    "id": 5,
+    "name": "Tablet",
+    "description": "10-inch display tablet with 128GB storage",
+    "price": 349.99,
+    "category": "Electronics",
+    "image": "/modern-tablet-display.png",
+    "stock": 5
+  },
+  {
+    "id": 6,
+    "name": "Yoga Mat",
+    "description": "Non-slip yoga mat for workouts and meditation",
+    "price": 34.99,
+    "category": "Sports",
+    "image": "/rolled-yoga-mat.png",
+    "stock": 25
+  }
+]
