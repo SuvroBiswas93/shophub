@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
@@ -11,26 +11,24 @@ export default function AddItemPage() {
   const router = useRouter();
 
   const {
-  register,
-  handleSubmit,
-  reset,
-  control,
-  formState: { errors, isSubmitting },
-} = useForm({
-  defaultValues: {
-    name: "",
-    description: "",
-    price: "",
-    category: "Electronics",
-    stock: "",
-    image: "",
-  },
-});
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      price: "",
+      category: "Electronics",
+      stock: "",
+      image: "",
+    },
+  });
 
-const imageUrl = useWatch({
-  control,
-  name: "image",
-});
+  // Watch image field for live preview
+  const imageUrl = useWatch({ control, name: "image" });
 
   const onSubmit = async (data) => {
     try {
@@ -57,7 +55,7 @@ const imageUrl = useWatch({
           onSubmit={handleSubmit(onSubmit)}
           className="bg-white p-8 rounded-lg shadow-xl space-y-6"
         >
-          {/* Name */}
+          {/* Item Name */}
           <div>
             <label className="font-semibold">Item Name</label>
             <input
@@ -73,10 +71,16 @@ const imageUrl = useWatch({
           <div>
             <label className="font-semibold">Description</label>
             <textarea
-              {...register("description", { required: true })}
+              {...register("description", {
+                required: "Description is required",
+                minLength: { value: 10, message: "Description must be at least 10 characters" },
+              })}
               rows={4}
               className="w-full border px-4 py-2 rounded"
             />
+            {errors.description && (
+              <p className="text-red-500 text-sm">{errors.description.message}</p>
+            )}
           </div>
 
           {/* Price + Category */}
@@ -86,19 +90,31 @@ const imageUrl = useWatch({
               <input
                 type="number"
                 step="0.01"
-                {...register("price", { required: true, min: 0 })}
+                {...register("price", {
+                  required: "Price is required",
+                  min: { value: 0, message: "Price cannot be negative" },
+                })}
                 className="w-full border px-4 py-2 rounded"
               />
+              {errors.price && (
+                <p className="text-red-500 text-sm">{errors.price.message}</p>
+              )}
             </div>
 
             <div>
               <label className="font-semibold">Category</label>
-              <select {...register("category")} className="w-full border px-4 py-2 rounded">
-                <option>Electronics</option>
-                <option>Fashion</option>
-                <option>Home</option>
-                <option>Sports</option>
+              <select
+                {...register("category", { required: "Category is required" })}
+                className="w-full border px-4 py-2 rounded"
+              >
+                <option value="Electronics">Electronics</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Home">Home</option>
+                <option value="Sports">Sports</option>
               </select>
+              {errors.category && (
+                <p className="text-red-500 text-sm">{errors.category.message}</p>
+              )}
             </div>
           </div>
 
@@ -107,11 +123,22 @@ const imageUrl = useWatch({
             <label className="font-semibold">Image URL</label>
             <input
               type="url"
-              {...register("image")}
+              {...register("image", {
+                required: "Image URL is required",
+                pattern: {
+                  value:
+                    /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|avif|svg))$/i,
+                  message: "Enter a valid image URL (png, jpg, jpeg, gif, webp, avif, svg)",
+                },
+              })}
               placeholder="https://example.com/image.jpg"
               className="w-full border px-4 py-2 rounded"
             />
+            {errors.image && (
+              <p className="text-red-500 text-sm">{errors.image.message}</p>
+            )}
 
+            {/* Preview */}
             {imageUrl && (
               <img
                 src={imageUrl}
@@ -127,14 +154,20 @@ const imageUrl = useWatch({
             <label className="font-semibold">Stock</label>
             <input
               type="number"
-              {...register("stock", { required: true, min: 0 })}
+              {...register("stock", {
+                required: "Stock is required",
+                min: { value: 0, message: "Stock cannot be negative" },
+              })}
               className="w-full border px-4 py-2 rounded"
             />
+            {errors.stock && (
+              <p className="text-red-500 text-sm">{errors.stock.message}</p>
+            )}
           </div>
 
           <button
             disabled={isSubmitting}
-            className="w-full bg-teal-600 text-white py-3 rounded hover:bg-teal-700"
+            className="w-full bg-teal-600 text-white py-3 rounded hover:bg-teal-700 disabled:bg-gray-400"
           >
             {isSubmitting ? "Adding..." : "Add Item"}
           </button>
