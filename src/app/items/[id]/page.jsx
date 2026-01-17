@@ -6,9 +6,9 @@ import Image from "next/image";
 import { getItemById, getItems } from "@/lib/items";
 import { notFound } from "next/navigation";
 
-// ✅ Metadata generation
+//  Metadata generation
 export async function generateMetadata({ params: promiseParams }) {
-  const params = await promiseParams; // <-- unwrap params
+  const params = await promiseParams; //  unwrap params
   const item = await getItemById(params.id);
 
   if (!item) return { title: "Item Not Found - ShopHub" };
@@ -19,15 +19,15 @@ export async function generateMetadata({ params: promiseParams }) {
   };
 }
 
-// ✅ Static params for SSG
+//  Static params for SSG
 export async function generateStaticParams() {
   const items = await getItems();
   return items.map((item) => ({ id: item.id.toString() }));
 }
 
-// ✅ Page component
+// Page component
 export default async function ItemDetailPage({ params: promiseParams }) {
-  const params = await promiseParams; // <-- unwrap params
+  const params = await promiseParams; // unwrap params
   const item = await getItemById(params.id);
 
   if (!item) notFound(); // renders app/not-found.jsx
@@ -87,7 +87,7 @@ export default async function ItemDetailPage({ params: promiseParams }) {
                 <p className="text-gray-600 leading-relaxed">{item.description}</p>
               </div>
 
-              <div className="mt-8 p-4 bg-gradient-to-r from-teal-50 to-orange-50 rounded-lg border border-teal-200">
+              <div className="mt-8 p-4 bg-linear-to-r from-teal-50 to-orange-50 rounded-lg border border-teal-200">
                 <p className="text-sm text-gray-600">
                   <span className="font-semibold">Product ID:</span> #{item.id}
                 </p>
@@ -96,7 +96,7 @@ export default async function ItemDetailPage({ params: promiseParams }) {
 
             <button
               disabled={item.stock === 0}
-              className={`w-full bg-gradient-to-r from-teal-600 to-orange-500 text-white font-bold py-3 px-4 rounded hover:from-teal-700 hover:to-orange-600 transition mt-8 ${
+              className={`w-full bg-linear-to-r from-teal-600 to-orange-500 text-white font-bold py-3 px-4 rounded hover:from-teal-700 hover:to-orange-600 transition mt-8 ${
                 item.stock === 0 ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >

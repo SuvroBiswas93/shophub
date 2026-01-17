@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import Link from "next/link";
@@ -48,7 +47,7 @@ export default async function ItemsPage() {
                     <h2 className="text-xl font-bold text-gray-800 mt-2 line-clamp-2">
                       {item.name}
                     </h2>
-                    <p className="text-gray-600 text-sm mt-2 flex-grow line-clamp-2">
+                    <p className="text-gray-600 text-sm mt-2 grow line-clamp-2">
                       {item.description}
                     </p>
                     <div className="flex justify-between items-center mt-4">

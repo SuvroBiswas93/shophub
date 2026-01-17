@@ -21,8 +21,9 @@ export default function Home() {
         <Categories />
         <Testimonials />
         <FAQ />
-        <CTA />
         <Newsletter />
+        <CTA />
+       
       </main>
 
       <Footer />
