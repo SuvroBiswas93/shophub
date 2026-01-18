@@ -130,7 +130,7 @@ To access protected features (Add Item page), use the following demo credentials
 - Customer testimonials  
 - FAQ section  
 - Newsletter subscription  
-- Footer with social links
+- Footer with links
 
 ### 7. Form Handling
 - Comprehensive validation rules  
