@@ -1,22 +1,23 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
-import { addItem } from "@/lib/items";
-import Image from "next/image";
 
 export default function AddItemPage() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
     reset,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       name: "",
@@ -32,16 +33,22 @@ export default function AddItemPage() {
 
   const onSubmit = async (data) => {
     try {
-      await addItem(data);
+      setLoading(true);
+      const res = await fetch("/api/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) throw new Error("Failed to add item");
+
       toast.success("Item added successfully!");
       reset();
-
-      setTimeout(() => {
-        router.push("/items");
-      }, 1500);
+      setTimeout(() => router.push("/items"), 1000);
     } catch (err) {
-      toast.error("Failed to add item");
-      console.error(err);
+      toast.error(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,16 +80,15 @@ export default function AddItemPage() {
             <textarea
               {...register("description", {
                 required: "Description is required",
-                minLength: {
-                  value: 10,
-                  message: "Description must be at least 10 characters",
-                },
+                minLength: { value: 10, message: "Minimum 10 characters" },
               })}
               rows={4}
               className="w-full border px-4 py-2 rounded"
             />
             {errors.description && (
-              <p className="text-red-500 text-sm">{errors.description.message}</p>
+              <p className="text-red-500 text-sm">
+                {errors.description.message}
+              </p>
             )}
           </div>
 
@@ -95,19 +101,21 @@ export default function AddItemPage() {
                 step="0.01"
                 {...register("price", {
                   required: "Price is required",
-                  min: { value: 0, message: "Price cannot be negative" },
+                  min: { value: 0, message: "Cannot be negative" },
                 })}
                 className="w-full border px-4 py-2 rounded"
               />
               {errors.price && (
-                <p className="text-red-500 text-sm">{errors.price.message}</p>
+                <p className="text-red-500 text-sm">
+                  {errors.price.message}
+                </p>
               )}
             </div>
 
             <div>
               <label className="font-semibold">Category</label>
               <select
-                {...register("category", { required: "Category is required" })}
+                {...register("category")}
                 className="w-full border px-4 py-2 rounded"
               >
                 <option value="Electronics">Electronics</option>
@@ -115,9 +123,6 @@ export default function AddItemPage() {
                 <option value="Home">Home</option>
                 <option value="Sports">Sports</option>
               </select>
-              {errors.category && (
-                <p className="text-red-500 text-sm">{errors.category.message}</p>
-              )}
             </div>
           </div>
 
@@ -129,11 +134,12 @@ export default function AddItemPage() {
               {...register("image", {
                 required: "Image URL is required",
                 pattern: {
-                  value: /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|avif|svg))$/i,
+                  value:
+                    /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)|https:\/\/images\.unsplash\.com\/.+$/i,
                   message: "Enter a valid image URL",
                 },
               })}
-              placeholder="https://example.com/image.jpg"
+              placeholder="only unsplash image url(copy image address)"
               className="w-full border px-4 py-2 rounded"
             />
             {errors.image && (
@@ -141,8 +147,16 @@ export default function AddItemPage() {
             )}
 
             {imageUrl && (
-              <div className="w-40 h-40 relative mx-auto mt-4">
-                <Image src={imageUrl} alt="Preview" fill className="object-cover rounded" />
+              <div className="relative w-40 h-40 mt-4 mx-auto border rounded overflow-hidden">
+                <Image
+                  src={imageUrl}
+                  alt="Preview"
+                  fill
+                  className="object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg";
+                  }}
+                />
               </div>
             )}
           </div>
@@ -154,7 +168,7 @@ export default function AddItemPage() {
               type="number"
               {...register("stock", {
                 required: "Stock is required",
-                min: { value: 0, message: "Stock cannot be negative" },
+                min: { value: 0, message: "Cannot be negative" },
               })}
               className="w-full border px-4 py-2 rounded"
             />
@@ -164,14 +178,14 @@ export default function AddItemPage() {
           </div>
 
           <button
-            disabled={isSubmitting}
+            type="submit"
+            disabled={loading}
             className="w-full bg-teal-600 text-white py-3 rounded hover:bg-teal-700 disabled:bg-gray-400"
           >
-            {isSubmitting ? "Adding..." : "Add Item"}
+            {loading ? "Adding..." : "Add Item"}
           </button>
         </form>
       </div>
-
       <Footer />
     </>
   );

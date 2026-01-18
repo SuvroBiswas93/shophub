@@ -1,51 +1,72 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getItems } from "@/lib/items";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 import Link from "next/link";
 import Image from "next/image";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import itemsData from "@/data/items.json";
 
 export default function ItemsPage() {
-  const [items, setItems] = useState([]);
+  const [mongoItems, setMongoItems] = useState([]);
 
   useEffect(() => {
-    const fetchItems = async () => {
-      const data = await getItems();
-      setItems(data);
-    };
-    fetchItems();
+    fetch("/api/items")
+      .then((res) => res.json())
+      .then((data) => setMongoItems(data))
+      .catch(console.error);
   }, []);
+
+  const allItems = mongoItems.length > 0 ? mongoItems : itemsData;
 
   return (
     <>
       <Navbar />
-      <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        {items.map((item) => (
-          <div key={item._id || item.id} className="border rounded-lg overflow-hidden shadow hover:shadow-lg transition">
-            <div className="relative w-full h-64">
+
+      <div className="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {allItems.map((item, index) => (
+          <div
+            key={item._id ? `mongo-${item._id}` : `json-${item.id}-${index}`}
+            className="rounded-lg p-4 shadow-xl hover:shadow-2xl transition flex flex-col"
+          >
+            <div className="relative w-full h-48">
               <Image
                 src={item.image || "/placeholder.svg"}
                 alt={item.name}
                 fill
-                className="object-cover"
+                className="object-cover rounded"
               />
             </div>
-            <div className="p-4">
-              <h2 className="font-bold text-lg">{item.name}</h2>
-              <p className="text-gray-600 text-sm">{item.category}</p>
-              <p className="text-teal-600 font-bold text-lg mt-2">${item.price}</p>
-              <p className={`mt-1 font-semibold ${item.stock > 0 ? "text-green-600" : "text-red-600"}`}>
-                {item.stock > 0 ? `Stock: ${item.stock}` : "Out of Stock"}
+
+            {/* CONTENT */}
+            <div className="flex-1 space-y-2 mt-2">
+              <h2 className="text-xl font-bold">{item.name}</h2>
+
+              <p className="text-gray-600 text-sm">
+                {item.description}
               </p>
-              <Link href={`/items/${item.id || item._id}`} className="text-teal-600 mt-2 block">
-                View Details
-              </Link>
+
+              <p className="text-gray-500 text-sm">
+                Category: {item.category}
+              </p>
+
+              <p className="text-teal-600 font-bold text-lg">
+                ${item.price}
+              </p>
             </div>
+
+            {/* BUTTON */}
+            <Link
+              href={`/items/${item._id || item.id}`}
+              className="mt-auto block w-full rounded-lg bg-teal-500 px-4 py-3 text-center text-white font-medium hover:bg-teal-600 transition"
+            >
+              View Details
+            </Link>
           </div>
+
         ))}
       </div>
+
       <Footer />
     </>
   );

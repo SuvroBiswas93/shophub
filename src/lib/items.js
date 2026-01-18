@@ -1,45 +1,50 @@
+import { ObjectId } from "mongodb";
 import clientPromise from "./mongodb";
 import itemsData from "../data/items.json";
 
 /**
  * Get all items
- * JSON items first, then MongoDB items after
  */
 export async function getItems() {
   const client = await clientPromise;
   const db = client.db("shopHub");
-  const mongoItems = await db.collection("items").find({}).sort({ createdAt: -1 }).toArray();
 
-  // Combine JSON items and DB items
-  return [...itemsData, ...mongoItems];
+  const mongoItems = await db
+    .collection("items")
+    .find({})
+    .sort({ createdAt: -1 })
+    .toArray();
+
+  return mongoItems.length > 0 ? mongoItems : itemsData;
 }
 
 /**
  * Get single item by ID
- * Checks JSON first, then MongoDB
  */
 export async function getItemById(id) {
-  // Try JSON items
+  // Try JSON items first
   let item = itemsData.find((item) => item.id === Number(id));
-
   if (item) return item;
 
-  // Then try MongoDB items
+  // Then MongoDB items
   const client = await clientPromise;
   const db = client.db("shopHub");
   item = await db.collection("items").findOne({ _id: typeof id === "string" ? new ObjectId(id) : id });
-
   return item;
 }
 
 /**
  * Get items by category
- * JSON + DB items filtered by category
  */
 export async function getItemsByCategory(category) {
   const client = await clientPromise;
   const db = client.db("shopHub");
-  const mongoItems = await db.collection("items").find({ category }).sort({ createdAt: -1 }).toArray();
+
+  const mongoItems = await db
+    .collection("items")
+    .find({ category: { $regex: new RegExp(`^${category}$`, "i") } })
+    .sort({ createdAt: -1 })
+    .toArray();
 
   const filteredJSONItems = itemsData.filter(
     (item) => item.category.toLowerCase() === category.toLowerCase()
@@ -67,5 +72,5 @@ export async function addItem(data) {
   };
 
   const result = await collection.insertOne(newItem);
-  return result.insertedId; // You can fetch the inserted item later if needed
+  return { _id: result.insertedId, ...newItem };
 }

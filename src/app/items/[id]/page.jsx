@@ -1,15 +1,34 @@
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
-import Link from "next/link";
 import Image from "next/image";
-import { getItemById, getItems } from "@/lib/items";
 import { notFound } from "next/navigation";
+import clientPromise from "@/lib/mongodb";
+import Navbar from "@/components/navbar";
+import Link from "next/link";
+import Footer from "@/components/footer";
+
+// Fetch single item
+async function getItemById(id) {
+  const client = await clientPromise;
+  const db = client.db("shopHub");
+
+  // Check MongoDB ObjectId
+  if (id.length === 24) {
+    const { ObjectId } = await import("mongodb");
+    return await db.collection("items").findOne({ _id: new ObjectId(id) });
+  }
+
+  // Fallback for JSON items
+  const items = (await import("@/data/items.json")).default;
+  return items.find((item) => item.id.toString() === id);
+}
 
 // Metadata
-export async function generateMetadata({ params }) {
+export async function generateMetadata(props) {
+  const params = await props.params; //  IMPORTANT
   const item = await getItemById(params.id);
 
-  if (!item) return { title: "Item Not Found - ShopHub" };
+  if (!item) {
+    return { title: "Item Not Found - ShopHub" };
+  }
 
   return {
     title: `${item.name} - ShopHub`,
@@ -17,20 +36,15 @@ export async function generateMetadata({ params }) {
   };
 }
 
-// Static Params
-export async function generateStaticParams() {
-  const items = await getItems();
-  return items.map((item) => ({ id: item.id.toString() }));
-}
-
 // Page
-export default async function ItemDetailPage({ params }) {
+export default async function ItemDetailPage(props) {
+  const params = await props.params; //  IMPORTANT
   const item = await getItemById(params.id);
 
   if (!item) notFound();
 
   return (
-    <>
+      <>
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 py-12">
