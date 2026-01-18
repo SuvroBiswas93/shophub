@@ -10,7 +10,7 @@ A simple e-commerce web application built with **Next.js 16**, featuring a respo
 
 ## 📋 Project Description
 
-**ShopHub** is a full-stack e-commerce platform that allows users to browse products, view detailed item information, and manage inventory.  
+**ShopHub** is a Simple full-stack e-commerce platform that allows users to browse products, view detailed item information, and manage inventory.  
 It features a clean, modern interface with authentication-protected routes for administrative tasks such as adding new items.
 
 ---
