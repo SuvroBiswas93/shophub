@@ -1,6 +1,6 @@
 # ShopHub 🛍️
 
-A simple e-commerce web application built with **Next.js 16**, featuring a responsive UI, MongoDB integration, and authentication-protected admin functionality.
+A simple e-commerce web application built with **Next.js 16**, featuring a responsive UI, MongoDB integration, and authentication-protected functionality.
 
 ---
 
