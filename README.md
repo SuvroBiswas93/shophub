@@ -37,9 +37,9 @@ It features a clean, modern interface with authentication-protected routes for a
 
 ### Install dependencies
 
-    ```bash
+```bash
     npm install
-    ```
+```
 ---
 
 ### Configure environment variables
